@@ -10,7 +10,7 @@ import (
 
 func findCommand(cmdName string) (string, error) {
 	cleanedCMDName := strings.TrimSpace(cmdName)
-	return cleanedCMDName, fmt.Errorf("%q: command not found", cleanedCMDName)
+	return cleanedCMDName, fmt.Errorf("%s: command not found", cleanedCMDName)
 }
 
 func main() {
