@@ -66,7 +66,6 @@ func typeCMD(cmd string) {
 	dir, err := executableInPath(cmd)
 	if err != nil {
 		fmt.Fprint(os.Stdout, "%s: command not found", cmd)
-		fmt.Printf("%s: command not found", cmd)
 		return
 	}
 	if dir != "" {
