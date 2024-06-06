@@ -65,7 +65,7 @@ func typeCMD(cmd string) {
 	cmd = strings.TrimSpace(cmd)
 	dir, err := executableInPath(cmd)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("%s: comaand not found", cmd)
 		return
 	}
 	if dir != "" {
