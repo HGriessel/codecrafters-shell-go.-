@@ -144,7 +144,7 @@ func main() {
 
 	// Wait for user input
 	for {
-		fmt.Fprint(os.Stdout, "$ ")
+		fmt.Fprint(os.Stdout, "\n$ ")
 		reader := bufio.NewReader(os.Stdin)
 
 		input, err := reader.ReadString('\n')
