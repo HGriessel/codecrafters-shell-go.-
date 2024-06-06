@@ -63,15 +63,15 @@ func executableInPath(cmd string) (string, error) {
 
 func typeCMD(cmd string) {
 	cmd = strings.TrimSpace(cmd)
-	dir, _ := executableInPath(cmd)
-	if dir != "" {
-		fmt.Printf("%s is %s/%s\n", cmd, dir, cmd)
-		return
-	}
 	if _, builtin := builtInFuncMap[cmd]; builtin {
 		fmt.Printf("%s is a shell builtin\n", cmd)
 	} else {
 		fmt.Printf("%s not found\n", cmd)
+	}
+	dir, _ := executableInPath(cmd)
+	if dir != "" {
+		fmt.Printf("%s is %s/%s\n", cmd, dir, cmd)
+		return
 	}
 
 }
