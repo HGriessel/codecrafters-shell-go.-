@@ -18,22 +18,26 @@ func main() {
 	//fmt.Println("Logs from your program will appear here!")
 
 	// Uncomment this block to pass the first stage
-	fmt.Fprint(os.Stdout, "$ ")
 
 	// Wait for user input
-	reader := bufio.NewReader(os.Stdin)
 
-	input, err := reader.ReadString('\n')
-	if err != nil {
-		log.Fatal(err)
+	for {
+		fmt.Fprint(os.Stdout, "$ ")
+		reader := bufio.NewReader(os.Stdin)
+
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		command, err := findCommand(input)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		log.Println(command)
+
 	}
-
-	command, err := findCommand(input)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	log.Println(command)
 
 }
