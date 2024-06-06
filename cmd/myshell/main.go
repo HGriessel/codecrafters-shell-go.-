@@ -31,6 +31,10 @@ func exit(codeStr string) {
 	os.Exit(val)
 }
 
+func echo(strArgs ...string) {
+	fmt.Println(strings.Join(strArgs, " "))
+}
+
 func init() {
 	// set up logging
 	file, err := os.OpenFile("logs.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
@@ -51,6 +55,14 @@ func init() {
 				fmt.Println("Invalid argument type for exit")
 			}
 		}
+	}
+	builtInFuncMap["echo"] = func(args ...interface{}) {
+		strArgs := make([]string, len(args))
+
+		for i, v := range args {
+			strArgs[i] = v.(string)
+		}
+		echo(strArgs...)
 	}
 }
 
