@@ -3,8 +3,15 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
+	"strings"
 )
+
+func findCommand(cmdName string) (string, error) {
+	cleanedCMDName := strings.TrimSpace(cmdName)
+	return cleanedCMDName, fmt.Errorf("%q: command not found", cleanedCMDName)
+}
 
 func main() {
 	// You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -14,5 +21,19 @@ func main() {
 	fmt.Fprint(os.Stdout, "$ ")
 
 	// Wait for user input
-	bufio.NewReader(os.Stdin).ReadString('\n')
+	reader := bufio.NewReader(os.Stdin)
+
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	command, err := findCommand(input)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println(command)
+
 }
