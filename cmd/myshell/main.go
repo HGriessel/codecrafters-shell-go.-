@@ -8,8 +8,26 @@ import (
 	"strings"
 )
 
+var (
+	WarningLogger *log.Logger
+	InfoLogger    *log.Logger
+	ErrorLogger   *log.Logger
+)
+
+func init() {
+	file, err := os.OpenFile("logs.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	InfoLogger = log.New(file, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
+	WarningLogger = log.New(file, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
+	ErrorLogger = log.New(file, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+}
+
 func findCommand(cmdName string) (string, error) {
 	cleanedCMDName := strings.TrimSpace(cmdName)
+	fmt.Printf("%s: command not found\n", cleanedCMDName)
 	return cleanedCMDName, fmt.Errorf("%s: command not found", cleanedCMDName)
 }
 
@@ -27,16 +45,16 @@ func main() {
 
 		input, err := reader.ReadString('\n')
 		if err != nil {
-			log.Fatal(err)
+			ErrorLogger.Println(err)
 		}
 
 		command, err := findCommand(input)
 
 		if err != nil {
-			fmt.Println(err)
+			ErrorLogger.Println(err)
 		}
 
-		log.Println(command)
+		InfoLogger.Println(command)
 
 	}
 
