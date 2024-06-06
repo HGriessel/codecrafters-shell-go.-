@@ -57,7 +57,7 @@ func executableInPath(cmd string) (string, error) {
 			}
 		}
 	}
-	return "", fmt.Errorf("%s: command not found\n", cmd)
+	return "", fmt.Errorf("%s: command not found", cmd)
 
 }
 
