@@ -64,7 +64,7 @@ func executableInPath(cmd string) (string, error) {
 func typeCMD(cmd string) {
 	dir, err := executableInPath(cmd)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Print(err)
 		return
 	}
 	if dir != "" {
