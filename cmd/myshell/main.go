@@ -40,8 +40,6 @@ func echo(strArgs ...string) {
 
 func executableInPath(cmd string) (string, error) {
 	paths := strings.Split(PATH, ":")
-	b := []byte(PATH)
-	os.Stdout.Write(b)
 	for _, dir := range paths {
 		files, err := ioutil.ReadDir(dir)
 		if err != nil {
