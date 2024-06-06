@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -43,8 +44,12 @@ func executableInPath(cmd string) (string, error) {
 	for _, dir := range paths {
 		files, err := ioutil.ReadDir(dir)
 		if err != nil {
-			ErrorLogger.Println(err)
-			return "", err
+			if errors.Is(err, os.ErrNotExist) {
+				continue
+			} else {
+				ErrorLogger.Println(err)
+				return "", err
+			}
 		}
 		for _, file := range files {
 			if cmd == file.Name() {
