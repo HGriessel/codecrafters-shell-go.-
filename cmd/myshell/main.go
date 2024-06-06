@@ -63,7 +63,7 @@ func executableInPath(cmd string) (string, error) {
 
 func typeCMD(cmd string) {
 	cmd = strings.TrimSpace(cmd)
-	dir, err := executableInPath(cmd)
+	dir, _ := executableInPath(cmd)
 	if dir != "" {
 		fmt.Printf("%s is %s/%s\n", cmd, dir, cmd)
 		return
