@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
@@ -17,6 +18,7 @@ var (
 	WarningLogger  *log.Logger
 	ErrorLogger    *log.Logger
 	mutex          = &sync.Mutex{} // To safely append to funcMap concurrently
+	PATH           string
 )
 
 // Function type that accepts an arbitrary number of interface{} arguments
@@ -36,7 +38,36 @@ func echo(strArgs ...string) {
 	return
 }
 
+func executableInPath(cmd string) (string, error) {
+	paths := strings.Split(PATH, ":")
+	b := []byte(PATH)
+	os.Stdout.Write(b)
+	for _, dir := range paths {
+		files, err := ioutil.ReadDir(dir)
+		if err != nil {
+			ErrorLogger.Println(err)
+			return "", err
+		}
+		for _, file := range files {
+			if cmd == file.Name() {
+				return dir, nil
+			}
+		}
+	}
+	return "", fmt.Errorf("%s: command not found", cmd)
+
+}
+
 func typeCMD(cmd string) {
+	dir, err := executableInPath(cmd)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	if dir != "" {
+		fmt.Printf("%s is %s/%s\n", cmd, dir, cmd)
+		return
+	}
 	if _, builtin := builtInFuncMap[cmd]; builtin {
 		fmt.Printf("%s is a shell builtin\n", cmd)
 	} else {
@@ -46,6 +77,7 @@ func typeCMD(cmd string) {
 }
 
 func init() {
+	PATH = os.Getenv("PATH")
 	// set up logging
 	file, err := os.OpenFile("logs.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
