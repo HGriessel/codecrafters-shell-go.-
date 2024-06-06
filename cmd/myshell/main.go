@@ -65,6 +65,7 @@ func typeCMD(cmd string) {
 	cmd = strings.TrimSpace(cmd)
 	dir, err := executableInPath(cmd)
 	if err != nil {
+		fmt.Fprint(os.Stdout, "%s: command not found", cmd)
 		fmt.Printf("%s: command not found", cmd)
 		return
 	}
@@ -144,7 +145,7 @@ func main() {
 
 	// Wait for user input
 	for {
-		fmt.Fprint(os.Stdout, "\n$ ")
+		fmt.Fprint(os.Stdout, "$ ")
 		reader := bufio.NewReader(os.Stdin)
 
 		input, err := reader.ReadString('\n')
