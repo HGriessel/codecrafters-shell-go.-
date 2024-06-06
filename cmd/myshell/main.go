@@ -31,7 +31,7 @@ func main() {
 	command, err := findCommand(input)
 
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 
 	log.Println(command)
