@@ -64,10 +64,6 @@ func executableInPath(cmd string) (string, error) {
 func typeCMD(cmd string) {
 	cmd = strings.TrimSpace(cmd)
 	dir, err := executableInPath(cmd)
-	if err != nil {
-		fmt.Fprintf(os.Stdout, "%s: command not found", cmd)
-		return
-	}
 	if dir != "" {
 		fmt.Printf("%s is %s/%s\n", cmd, dir, cmd)
 		return
