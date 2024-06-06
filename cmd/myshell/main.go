@@ -33,6 +33,16 @@ func exit(codeStr string) {
 
 func echo(strArgs ...string) {
 	fmt.Println(strings.Join(strArgs, " "))
+	return
+}
+
+func typeCMD(cmd string) {
+	if _, builtin := builtInFuncMap[cmd]; builtin {
+		fmt.Printf("%s is a shell builtin\n", cmd)
+	} else {
+		fmt.Printf("%s not found\n", cmd)
+	}
+
 }
 
 func init() {
@@ -63,6 +73,16 @@ func init() {
 			strArgs[i] = v.(string)
 		}
 		echo(strArgs...)
+	}
+	builtInFuncMap["type"] = func(args ...interface{}) {
+		if len(args) > 0 {
+			if cmd, ok := args[0].(string); ok {
+				typeCMD(cmd)
+			} else {
+				fmt.Println("Invalid argument type for exit")
+			}
+		}
+
 	}
 }
 
