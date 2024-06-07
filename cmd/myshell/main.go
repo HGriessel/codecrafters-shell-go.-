@@ -69,6 +69,14 @@ func pwdb() {
 	fmt.Println(dir)
 }
 
+func cdb(path string) {
+	err := os.Chdir(path)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}
+
 func typeCMD(cmd string) {
 	cmd = strings.TrimSpace(cmd)
 	dir, _ := executableInPath(cmd)
@@ -125,6 +133,18 @@ func init() {
 	builtInFuncMap["pwd"] = func(args ...interface{}) {
 		pwdb()
 	}
+	builtInFuncMap["cdb"] = func(args ...interface{}) {
+		if len(args) < 1 {
+			home, _ := os.UserHomeDir()
+			cdb(home)
+		} else if len(args) >= 1 {
+			if path, ok := args[0].(string); ok {
+				cdb(path)
+			}
+
+		}
+	}
+
 }
 
 func parseCMD(cmd string) (string, []string) {
