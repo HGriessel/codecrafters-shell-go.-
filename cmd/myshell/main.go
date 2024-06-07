@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
 	"strconv"
 	"strings"
 	"sync"
@@ -110,11 +111,17 @@ func init() {
 			if cmd, ok := args[0].(string); ok {
 				typeCMD(cmd)
 			} else {
-				fmt.Println("Invalid argument type for exit")
+				fmt.Println("Invalid argument type for type")
 			}
 		}
 
 	}
+}
+
+func runExecutable(cmd string, args ...string) (string, error) {
+	executable := exec.Command(cmd, args...)
+	out, err := executable.Output()
+	return string(out), err
 }
 
 func parseCMD(cmd string) (string, []string) {
@@ -127,16 +134,10 @@ func parseCMD(cmd string) (string, []string) {
 
 func findCommand(cmdName string) (string, error) {
 	cleanedCMDName := strings.TrimSpace(cmdName)
-	fmt.Printf("%s: command not found\n", cleanedCMDName)
 	return cleanedCMDName, fmt.Errorf("%s: command not found", cleanedCMDName)
 }
 
 func main() {
-	// You can use print statements as follows for debugging, they'll be visible when running tests.
-	//fmt.Println("Logs from your program will appear here!")
-
-	// Uncomment this block to pass the first stage
-
 	// Wait for user input
 	for {
 		fmt.Fprint(os.Stdout, "$ ")
@@ -149,6 +150,22 @@ func main() {
 
 		command, arguments := parseCMD(input)
 		InfoLogger.Printf("Trying %s with %v as arguments", command, arguments)
+
+		dir, _ := executableInPath(command)
+		if dir != "" {
+			args := make([]string, len(arguments))
+			for i, v := range arguments {
+				args[i] = v
+			}
+			full_path := dir + "/" + command
+			output, err := runExecutable(full_path, args...)
+			if err != nil {
+				fmt.Println(err, "external error")
+			}
+
+			fmt.Println(output)
+			continue
+		}
 		if builtInFunc, exists := builtInFuncMap[command]; exists {
 			args := make([]interface{}, len(arguments))
 			for i, v := range arguments {
