@@ -133,7 +133,7 @@ func init() {
 	builtInFuncMap["pwd"] = func(args ...interface{}) {
 		pwdb()
 	}
-	builtInFuncMap["cdb"] = func(args ...interface{}) {
+	builtInFuncMap["cd"] = func(args ...interface{}) {
 		if len(args) < 1 {
 			home, _ := os.UserHomeDir()
 			cdb(home)
