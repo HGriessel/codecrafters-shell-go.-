@@ -135,7 +135,7 @@ func init() {
 		pwdb()
 	}
 	builtInFuncMap["cd"] = func(args ...interface{}) {
-		if len(args) < 1 {
+		if len(args) < 1 || args[0] == "~" {
 			home, _ := os.UserHomeDir()
 			cdb(home)
 		} else if len(args) >= 1 {
