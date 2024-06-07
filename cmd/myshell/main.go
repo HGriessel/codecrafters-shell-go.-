@@ -152,6 +152,7 @@ func main() {
 		InfoLogger.Printf("Trying %s with %v as arguments", command, arguments)
 
 		dir, _ := executableInPath(command)
+
 		if dir != "" {
 			args := make([]string, len(arguments))
 			for i, v := range arguments {
@@ -159,11 +160,12 @@ func main() {
 			}
 			full_path := dir + "/" + command
 			output, err := runExecutable(full_path, args...)
+
 			if err != nil {
 				fmt.Println(err, "external error")
 			}
 
-			fmt.Println(output)
+			fmt.Print(output)
 			continue
 		}
 		if builtInFunc, exists := builtInFuncMap[command]; exists {
