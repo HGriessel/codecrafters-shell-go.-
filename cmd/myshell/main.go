@@ -8,9 +8,11 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"os/signal"
 	"strconv"
 	"strings"
 	"sync"
+	"syscall"
 )
 
 var (
@@ -118,12 +120,6 @@ func init() {
 	}
 }
 
-func runExecutable(cmd string, args ...string) (string, error) {
-	executable := exec.Command(cmd, args...)
-	out, err := executable.Output()
-	return string(out), err
-}
-
 func parseCMD(cmd string) (string, []string) {
 	inputs := strings.Fields(cmd)
 	command := strings.TrimSpace(inputs[0])
@@ -138,6 +134,7 @@ func findCommand(cmdName string) (string, error) {
 }
 
 func main() {
+
 	// Wait for user input
 	for {
 		fmt.Fprint(os.Stdout, "$ ")
@@ -158,14 +155,19 @@ func main() {
 			for i, v := range arguments {
 				args[i] = v
 			}
+
 			full_path := dir + "/" + command
-			output, err := runExecutable(full_path, args...)
+
+			executable := exec.Command(full_path, args...)
+			executable.Stdout = os.Stdout
+			if err := executable.Run(); err != nil {
+				fmt.Println("could not run command: ", err)
+			}
 
 			if err != nil {
 				fmt.Println(err, "external error")
 			}
 
-			fmt.Print(output)
 			continue
 		}
 		if builtInFunc, exists := builtInFuncMap[command]; exists {
