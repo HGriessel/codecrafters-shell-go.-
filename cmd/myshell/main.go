@@ -8,11 +8,9 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"os/signal"
 	"strconv"
 	"strings"
 	"sync"
-	"syscall"
 )
 
 var (
