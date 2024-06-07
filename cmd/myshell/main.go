@@ -70,9 +70,10 @@ func pwdb() {
 }
 
 func cdb(path string) {
+	//"/non-existing-directory: No such file or directory\\n
 	err := os.Chdir(path)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("%s: No such file or directory\n", path)
 		return
 	}
 }
