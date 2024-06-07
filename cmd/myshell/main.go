@@ -61,6 +61,13 @@ func executableInPath(cmd string) (string, error) {
 	return "", fmt.Errorf("%s: command not found", cmd)
 
 }
+func pwdb() {
+	dir, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(dir)
+}
 
 func typeCMD(cmd string) {
 	cmd = strings.TrimSpace(cmd)
@@ -114,7 +121,9 @@ func init() {
 				fmt.Println("Invalid argument type for type")
 			}
 		}
-
+	}
+	builtInFuncMap["pwd"] = func(args ...interface{}) {
+		pwdb()
 	}
 }
 
@@ -147,8 +156,13 @@ func main() {
 		InfoLogger.Printf("Trying %s with %v as arguments", command, arguments)
 
 		dir, _ := executableInPath(command)
-
-		if dir != "" {
+		if builtInFunc, exists := builtInFuncMap[command]; exists {
+			args := make([]interface{}, len(arguments))
+			for i, v := range arguments {
+				args[i] = v
+			}
+			builtInFunc(args...)
+		} else if dir != "" {
 			args := make([]string, len(arguments))
 			for i, v := range arguments {
 				args[i] = v
@@ -167,13 +181,6 @@ func main() {
 			}
 
 			continue
-		}
-		if builtInFunc, exists := builtInFuncMap[command]; exists {
-			args := make([]interface{}, len(arguments))
-			for i, v := range arguments {
-				args[i] = v
-			}
-			builtInFunc(args...)
 		} else {
 			fmt.Printf("%s: command not found\n", command)
 			ErrorLogger.Printf("%s: command not found\n", command)
